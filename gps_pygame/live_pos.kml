@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+    <visibility>0</visibility>
+    <open>0</open>
+    <NetworkLink>
+        <name>Follow the Spoofing signal</name>
+        <visibility>true</visibility>
+        <open>false</open>
+        <description>A link from the Placemark in position.kml
+        to allow for updates of the point.</description>
+        <refreshVisibility>false</refreshVisibility>
+        <flyToView>true</flyToView>
+        <Link>
+            <href>position.kml</href>
+            <refreshMode>onInterval</refreshMode>
+            <refreshInterval>1</refreshInterval>
+        </Link>
+    </NetworkLink>
+</kml>
