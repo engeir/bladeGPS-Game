@@ -1,4 +1,6 @@
 # bladeGPS
+See [bladeGPS-Game](gps_pygame/README.md) for readme for the added Python code.
+-------
 
 Very crude experimental implimentation of [gps-sdr-sim](https://github.com/osqzss/gps-sdr-sim) for real-time signal generation.
 The code works with bladeRF and has been tested on Windows 10 and Ubuntu 17.10.
