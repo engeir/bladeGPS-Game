@@ -11,6 +11,7 @@ import multiprocessing as mp
 import pygame as pg
 from geographiclib.geodesic import Geodesic
 import serial
+import folium
 
 import config as cf
 from arrow import Arrow
@@ -80,9 +81,11 @@ class TheGame:
         for event in pg.event.get():
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
+                    self.logging()
                     pg.quit()
                     quit()
             if event.type == pg.QUIT:
+                self.logging()
                 pg.quit()
                 quit()
         pressed = pg.key.get_pressed()
@@ -105,6 +108,24 @@ class TheGame:
         if not pressed[pg.K_DOWN] and self.the_arrow.vel <= 0.0:
             self.the_arrow.vel += cf.GLIDING
 
+    @staticmethod
+    def logging():
+        logger = []
+        c = []
+        with open("log.txt", "r") as log:
+            the_log = log.readlines()
+        the_log = [x.strip() for x in the_log]
+        for b in the_log:
+            if len(c) < 2:
+                c.append(float(b))
+            else:
+                logger.append(c)
+                c = []
+                c.append(float(b))
+        mapp = folium.Map(location=logger[0], zoom_start=10)
+        folium.vector_layers.PolyLine(logger).add_to(mapp)
+        mapp.save(outfile="log.html")
+
     def test_mode(self):
         """With test mode, you do not check with the receiver what
         coordinates its got, you just move from the static starting position.
@@ -124,7 +145,7 @@ class TheGame:
                 </kml>
             """ % (str(self.EW), str(self.NS)))
         with open("log.txt", "a") as log:
-            log.write("%s\t%s\n" % (str(self.NS), str(self.EW)))
+            log.write("%s\n%s\n" % (str(self.NS), str(self.EW)))
 
     def check_coordinates(self, out_q):
         """Check GPS/GLONASS-coordinates from the receiver, add the off-set and write it to a file.
@@ -161,7 +182,7 @@ class TheGame:
                         </kml>
                     """ % (str(EW), str(NS)))
                 with open("log.txt", "a") as log:
-                    log.write("%s\t%s\n" % (str(NS), str(EW)))
+                    log.write("%s\n%s\n" % (str(NS), str(EW)))
             elif data[2] == "V":
                 print("No fix.", end='\r')
 
