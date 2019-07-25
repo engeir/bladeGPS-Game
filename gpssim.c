@@ -2369,6 +2369,19 @@ void *gps_task(void *arg)
 		// Interactive mode
 		if (interactive)
 		{
+			// #### <EDIT> ####
+			// Added coordinate input from .txt file
+			FILE *file;
+			file = fopen("gps_pygame/position.txt", "r");
+			// Coordinates are saved in 'ublox_array'
+			float ublox_array[2];
+			int i;
+			for (i = 0; i < 2; i++)	{
+				fscanf(file, "%20f,", &ublox_array[i]);
+			}
+			fclose(file);
+			// #### </EDIT> ####
+			
 			key_direction = UNDEF;
 
 			switch (key)
@@ -2408,6 +2421,15 @@ void *gps_task(void *arg)
 			xyz[iumd][0] = xyz[iumd-1][0];
 			xyz[iumd][1] = xyz[iumd-1][1];
 			xyz[iumd][2] = xyz[iumd-1][2];
+			
+			// #### <EDIT> ####
+			// Update location to be given by the ublox receiver.
+			double test_now[3];
+			xyz2llh(xyz[iumd],test_now);
+			test_now[0] = ublox_array[0] / R2D;  // From degrees to radians, hence the division.
+			test_now[1] = ublox_array[1] / R2D;
+			llh2xyz(test_now,xyz[iumd]);
+			// #### </EDIT> ####
 
 			if ((direction!=UNDEF)&&(velocity>=0.0))
 			{
