@@ -110,6 +110,8 @@ class TheGame:
 
     @staticmethod
     def logging():
+        """Make a path on a map consisting of the coordinates created during the spoofing.
+        """
         logger = []
         c = []
         with open("log.txt", "r") as log:
