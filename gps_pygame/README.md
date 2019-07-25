@@ -14,6 +14,7 @@ The program uses the Python packages
 - `PIL`
 - `osmviz`
 - `numpy`
+- `folium`
 
 You run the program with
 ~~~
@@ -21,4 +22,4 @@ python3 main.py
 ~~~
 and get a promt weather to use real time GNSS-coordinates or a static position. For real time coordinates you will need a GNSS receiver. The program is tested to work with u-blox EVK-M8C.
 
-A `.kml` file is written which can be opened using Google Earh Pro, so for better visualization, Google Earth Pro is recommended. When run, the program will also write the coordinates to the file `log.txt` to be able to look back at the recorded data.
+A `.kml` file is written which can be opened using Google Earh Pro, so for better visualization, Google Earth Pro is recommended. When run, the program will also write the coordinates to the file `log.txt` to be able to look back at the recorded data, and when the program closes, a file `log.html` is created that draw the complete route.
