@@ -235,7 +235,7 @@ class TheGame:
                     pass
         try:
             if not self.background.is_alive():
-                # When the canvas is updated, reset the dot to the center.
+                # When the background is updated, reset the dot to the center.
                 self.background.join()
                 self.background = False
                 self.dot_x = self.dot_y = 0
