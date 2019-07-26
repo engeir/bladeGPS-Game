@@ -92,10 +92,12 @@ class TheGame:
         pressed = pg.key.get_pressed()
         if pressed[pg.K_LEFT]:
             # LEFT rotates 'dir' to the left. 'TURNING' given in degrees.
-            self.the_arrow.dir = self.the_arrow.dir.rotate(-cf.TURNING).normalized()
+            self.the_arrow.dir = self.the_arrow.dir.rotate(
+                -cf.TURNING).normalized()
         if pressed[pg.K_RIGHT]:
             # RIGHT rotates 'dir' to the right. 'TURNING' given in degrees.
-            self.the_arrow.dir = self.the_arrow.dir.rotate(cf.TURNING).normalized()
+            self.the_arrow.dir = self.the_arrow.dir.rotate(
+                cf.TURNING).normalized()
         if pressed[pg.K_UP] and self.the_arrow.vel < cf.MAX_VEL:
             # UP increases the speed.
             self.the_arrow.vel += cf.AXELERATION
@@ -130,6 +132,10 @@ class TheGame:
                 c.append(float(b))
         try:
             mapp = folium.Map(location=logger[0], zoom_start=10)
+            folium.Marker(logger[0], popup='<i>Mt. Hood Meadows</i>',
+                          tooltip='Start').add_to(mapp)
+            folium.Marker(logger[-1], popup='<i>Mt. Hood Meadows</i>',
+                          tooltip='Slutt').add_to(mapp)
             folium.vector_layers.PolyLine(logger).add_to(mapp)
             mapp.save(outfile="log.html")
         except Exception:
@@ -259,7 +265,8 @@ class TheGame:
         y_ratio = 2 * cf.BOARDER_Y / cf.SCREEN_HEIGHT
         x = int(self.dot_x / x_ratio + cf.SCREEN_WIDTH / 2)
         y = int(self.dot_y / y_ratio + cf.SCREEN_HEIGHT / 2)
-        pg.draw.circle(self.screen, cf.DOT_COLOR, (x, y), cf.DOT_SIZE, cf.DOT_FILLED)
+        pg.draw.circle(self.screen, cf.DOT_COLOR, (x, y),
+                       cf.DOT_SIZE, cf.DOT_FILLED)
 
     def game_loop(self):
         """Loop that runs the simulation and calls all methods.
