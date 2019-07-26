@@ -62,6 +62,9 @@ class TheGame:
         self.background = False
         self.dot_x, self.dot_y = self.the_arrow.two_d_pos.x, self.the_arrow.two_d_pos.y
         self.pastNS, self.pastEW = self.NS, self.EW
+        # Create a new log file for this session.
+        with open("log.txt", "w") as log:
+            log.write("")
         try:
             self.g_earth = subprocess.Popen('google-earth-pro')
         except Exception:
@@ -72,8 +75,6 @@ class TheGame:
         pg.display.set_caption("Real time spoofer")
         self.screen = pg.display.set_mode(
             (cf.SCREEN_WIDTH, cf.SCREEN_HEIGHT))
-        with open("log.txt", "w") as log:
-            log.write("")
 
     def events(self):
         """Event handling.
@@ -116,6 +117,7 @@ class TheGame:
         c = []
         with open("log.txt", "r") as log:
             the_log = log.readlines()
+        # Remove the '\n' (newlines) from the string.
         the_log = [x.strip() for x in the_log]
         # Need to put every odd item in first position of a list (latitudes),
         # and every other item in the second position of a list (longitudes).
@@ -166,6 +168,7 @@ class TheGame:
                     # Convert from XXYY.YY... (X: degree, Y: decimal minute) to decimal degree (XX.XX...).
                     DDM_NS = float(data[3]) / 100
                     DDM_EW = float(data[5]) / 100
+                    # Remove the decimals and then add them again, scaled up correctly.
                     DD_NS = DDM_NS - DDM_NS % 1 + \
                         (DDM_NS % 1) / 60 * 100
                     DD_EW = DDM_EW - DDM_EW % 1 + \
@@ -188,6 +191,7 @@ class TheGame:
                         </Placemark>
                         </kml>
                     """ % (str(EW), str(NS)))
+                # Write a log file that can be evaluated after finishing the program.
                 with open("log.txt", "a") as log:
                     log.write("%s\n%s\n" % (str(NS), str(EW)))
             elif data[2] == "V":
@@ -221,10 +225,12 @@ class TheGame:
         """Allow the background that is blitted to the PyGame surface to be
         updated without interfering and stopping the rest of the program.
         """
-        # Make the background update only when you approach the edge of the canvas.
+        # Make the background update only when you approach the edge of the screen.
         if (self.pastNS + cf.BOARDER_Y * 0.8) < self.NS or self.NS < (self.pastNS - cf.BOARDER_Y * 0.8) or \
            (self.pastEW + cf.BOARDER_X * 0.8) < self.EW or self.EW < (self.pastEW - cf.BOARDER_X * 0.8):
             if not self.background:
+                # If no process of updating the
+                # background is running, start one now.
                 self.background = mp.Process(
                     target=self.map.map_update, args=(self.NS, self.EW))
                 self.background.start()
@@ -247,6 +253,8 @@ class TheGame:
     def draw_dot(self):
         """Draw a dot representing the spoofing signal.
         """
+        # Need to scale the point according to the
+        # geographical position of the background map.
         x_ratio = 2 * cf.BOARDER_X / cf.SCREEN_WIDTH
         y_ratio = 2 * cf.BOARDER_Y / cf.SCREEN_HEIGHT
         x = int(self.dot_x / x_ratio + cf.SCREEN_WIDTH / 2)
