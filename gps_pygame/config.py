@@ -27,6 +27,7 @@ SCALING = [x / 2 for x in RELATIVE]
 AXELERATION = 0.1
 GLIDING = 0.01
 MAX_VEL = 2.0  # Ca. 216 km/h (=2.0 * 30 [FPS] * 3.6)
+TURNING = 3
 
 # Moving dot
 DOT_COLOR = RED
