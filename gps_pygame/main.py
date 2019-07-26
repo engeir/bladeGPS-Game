@@ -90,11 +90,11 @@ class TheGame:
                 quit()
         pressed = pg.key.get_pressed()
         if pressed[pg.K_LEFT]:
-            # LEFT rotates 'dir' to the left, one degree at the time.
-            self.the_arrow.dir = self.the_arrow.dir.rotate(-1).normalized()
+            # LEFT rotates 'dir' to the left. 'TURNING' given in degrees.
+            self.the_arrow.dir = self.the_arrow.dir.rotate(-cf.TURNING).normalized()
         if pressed[pg.K_RIGHT]:
-            # RIGHT rotates 'dir' to the right, one degree at the time.
-            self.the_arrow.dir = self.the_arrow.dir.rotate(1).normalized()
+            # RIGHT rotates 'dir' to the right. 'TURNING' given in degrees.
+            self.the_arrow.dir = self.the_arrow.dir.rotate(cf.TURNING).normalized()
         if pressed[pg.K_UP] and self.the_arrow.vel < cf.MAX_VEL:
             # UP increases the speed.
             self.the_arrow.vel += cf.AXELERATION
@@ -117,6 +117,8 @@ class TheGame:
         with open("log.txt", "r") as log:
             the_log = log.readlines()
         the_log = [x.strip() for x in the_log]
+        # Need to put every odd item in first position of a list (latitudes),
+        # and every other item in the second position of a list (longitudes).
         for b in the_log:
             if len(c) < 2:
                 c.append(float(b))
@@ -124,9 +126,12 @@ class TheGame:
                 logger.append(c)
                 c = []
                 c.append(float(b))
-        mapp = folium.Map(location=logger[0], zoom_start=10)
-        folium.vector_layers.PolyLine(logger).add_to(mapp)
-        mapp.save(outfile="log.html")
+        try:
+            mapp = folium.Map(location=logger[0], zoom_start=10)
+            folium.vector_layers.PolyLine(logger).add_to(mapp)
+            mapp.save(outfile="log.html")
+        except Exception:
+            print('No logged coordinates to use.')
 
     def test_mode(self):
         """With test mode, you do not check with the receiver what
