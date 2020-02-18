@@ -7,7 +7,6 @@ An extended version of **bladeGPS** where, instead of changing the position usin
 
 The program uses the following Python packages which should be installed
 - `subprocess`
-- `multiprocessing`
 - `pygame`
 - `geographiclib`
 - `serial`
