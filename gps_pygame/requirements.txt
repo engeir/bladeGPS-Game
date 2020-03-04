@@ -1,0 +1,6 @@
+pygame==1.9.*
+geographiclib==1.*
+serial
+folium
+Pillow==7.*
+osmviz==3.2.*
