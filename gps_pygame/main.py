@@ -5,6 +5,7 @@ Author: Eirik Rolland Enger
 
 import os
 import sys
+import platform
 import time
 import subprocess
 import multiprocessing as mp
@@ -17,12 +18,6 @@ import config as cf
 from arrow import Arrow
 from mapper import Map
 from text_obj import Text
-
-try:
-    gps = serial.Serial('/dev/ttyACM0', baudrate=9600)
-except Exception:
-    print("The port cannot be opened. Check that your unit is connected to the port you're opening.")
-    exit()
 
 
 class TheGame:
@@ -41,6 +36,12 @@ class TheGame:
                     input('Do you want to take in live GNSS-signals? (y/n)\t'))
                 if string in ('y', 'yes'):
                     self.test_mode_on = False
+                    try:
+                        self.gps = serial.Serial('/dev/ttyACM0', baudrate=9600)
+                    except Exception:
+                        print(
+                            "The port cannot be opened. Check that your unit is connected to the port you're opening.")
+                        exit()
                 elif string in ('n', 'no'):
                     self.test_mode_on = True
                 else:
@@ -66,7 +67,12 @@ class TheGame:
         with open("log.txt", "w") as log:
             log.write("")
         try:
-            self.g_earth = subprocess.Popen('google-earth-pro')
+            what_os = platform.system()
+            if what_os == 'Linux':
+                self.g_earth = subprocess.Popen('google-earth-pro')
+            elif what_os == 'Darwin':
+                subprocess.call(["/usr/bin/open", "-n", "-a",
+                                 "/Applications/Google Earth Pro.app"])
         except Exception:
             pass
         # Wait for Google Earth Pro to open so that the PyGame window opens as the top layer.
@@ -165,7 +171,7 @@ class TheGame:
     def check_coordinates(self, out_q):
         """Check GPS/GLONASS-coordinates from the receiver, add the off-set and write it to a file.
         """
-        line = gps.readline().decode("utf-8")
+        line = self.gps.readline().decode("utf-8")
         data = line.split(',')
         if data[0] == "$GNRMC":
             if data[2] == "A":
