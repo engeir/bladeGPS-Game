@@ -1,7 +1,9 @@
-numpy==1.16.*
-pygame==1.9.*
-geographiclib==1.*
-serial
-folium
-Pillow==7.*
-osmviz==3.2.*
+pip==20.0.2
+wheel==0.33.1
+numpy==1.18.2
+folium==0.10.1
+geographiclib==1.50
+osmviz==3.2.0
+Pillow==7.1.1
+pygame==1.9.6
+pyserial==3.4
